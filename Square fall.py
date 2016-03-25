@@ -17,12 +17,12 @@ cyan = (0,255,255)
 
 colors = [red, green, blue, darkBlue, black, pink, cyan]
 
-Width = 400
+Width = 800
 Height = 600
 
 positions = []
 
-screen = pygame.display.set_mode((Width,Height))
+screen = pygame.display.set_mode((Width,Height),pygame.FULLSCREEN)
 back = pygame.Surface((Width,Height))
 background = back.convert()
 background.fill(white)
@@ -39,12 +39,13 @@ while True:
 	for event in pygame.event.get():
 		if event.type == KEYDOWN:
 			if event.key == K_q:
+				print positions
 				exit()
 
 	screen.blit(background,(0,0))
+
 	for x in range(len(positions)):
 		pygame.draw.rect(screen, positions[x][0], (positions[x][1],positions[x][2],50,50), 0)
-		#print positions
 
 	if not moving:
 		moving = True
@@ -55,6 +56,9 @@ while True:
 	if positions[len(positions)-1][2] == heights[(positions[len(positions)-1][1]/50)-1] or heights[(positions[len(positions)-1][1]/50)-1]<0:
 		moving = False
 		heights[(positions[len(positions)-1][1]/50)-1] -= 50
+		
+		if heights[(positions[len(positions)-1][1]/50)-1]<-50:
+			del positions[len(positions)-1]
 
 	pygame.display.update()
 	#time.sleep(0.1)
