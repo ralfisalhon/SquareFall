@@ -5,7 +5,25 @@ from random import randrange
 import pygame.surfarray as surfarray
 pygame.init()
 
-imgsurface = pygame.image.load("surfarray.jpg")
+
+
+#LOAD THE IMAGE
+imgsurface = pygame.image.load("back1.jpg")
+
+#SET IMAGE DEFORMATION (Min: 2)
+deform = 10
+
+#SET UPDATE TIMER
+timer = 1000
+
+#START FILLED?
+filled = True
+
+#SLOWLY BETTER PICTURE? (Deform Min: 10)
+better = True
+
+
+
 imgarray = surfarray.array3d(imgsurface)
 
 blue = (0,0,255)
@@ -21,15 +39,17 @@ background = back.convert()
 background.fill(white)
 screen.blit(background,(0,0))
 
-'''print imgarray
-print len(imgarray)
-print imgarray[0][0]
 
-print imgarray[0][0][0]
-print imgarray[0][0][1]
-print imgarray[0][0][2]'''
+if filled:
+	for y in range(Height):
+		for x in range(Width):
+			toAppend = imgarray[x][y][0], imgarray[x][y][1], imgarray[x][y][2]
+			pygame.draw.rect(screen, toAppend, (x, y, deform, deform), 0)
 
-positions = []
+	pygame.display.update()
+
+
+wait = 0
 
 while True:
 	for event in pygame.event.get():
@@ -37,20 +57,19 @@ while True:
 			if event.key == K_q:
 				exit()
 
-	screen.blit(background,(0,0))
+	#screen.blit(background,(0,0))
 	
-	for x in range(len(positions)):
-		pygame.draw.rect(screen, positions[x][0], (positions[x][1],positions[x][2],2,2), 0)
-
 	random1 = randrange(0, Width)
 	random2 = randrange(0, Height)
 
-	#print imgarray[random1][random2]
+	toAppend = imgarray[random1][random2][0], imgarray[random1][random2][1], imgarray[random1][random2][2]
 
-	toAppend = imgarray[random1][random2][0],imgarray[random1][random2][1],imgarray[random1][random2][2]
+	pygame.draw.rect(screen, toAppend, (random1, random2, deform, deform), 0)
 
-	positions.append((toAppend,random1,random2))
+	if wait > timer:
+		pygame.display.update()
+		wait = 0
+		if deform > 3 and better:
+			deform = deform*0.99
 
-	#print positions
-
-	pygame.display.update()
+	wait += 1
